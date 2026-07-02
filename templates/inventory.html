@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой Инвентарь</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <h1>Инвентарь</h1>
+    <div class="inventory-grid">
+        {% if items %}
+            {% for item in items %}
+            <div class="item-card rarity-{{ item.rarity }}">
+                <img src="{{ item.image }}" alt="{{ item.name }}">
+                <h3>{{ item.name }}</h3>
+                <p>Тип: {{ item.category }}</p>
+                <p>Кол-во: <b>{{ item.quantity }}</b></p>
+            </div>     
+        {% else %}
+            <p>Ваш инвентарь пуст</p>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+</body>
+</html>
