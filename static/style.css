@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+    /* Цветовая палитра фэнтези (темная тема) */
+    --bg-dark: #0f121b;
+    --bg-card: rgba(30, 35, 45, 0.6);
+    --text-primary: #e0e6ed;
+    --text-accent: #f5a623; /* Золотой */
+    
+    /* Цвета редкостей */
+    --rarity-common: #88929b;
+    --rarity-rare: #4a90e2;
+    --rarity-epic: #b142ff;
+    --rarity-legendary: #ffaa00;
+}
+
+body {
+    background-color: var(--bg-dark);
+    /* Магический радиальный градиент */
+    background: radial-gradient(circle at 50% -20%, #301f4c 0%, #0f121b 60%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    
+    /* Настоящий 8-битный ретро-шрифт от Google Fonts */
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    
+    /* Стилизация скроллбара под фэнтези */
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-accent) var(--bg-dark);
+}
+
+/* Красивый скроллбар для Chrome/Edge */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb {
+    background-color: var(--text-accent);
+    border-radius: 4px;
+}
+
+/* Заголовки (с тенью для эффекта объема) */
+h1, h2, h3 {
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 0px #000, 0 0 15px rgba(245, 166, 35, 0.3);
+    color: var(--text-accent);
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+}
+
+/* Сетка инвентаря */
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 25px;
+    padding: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Карточка предмета (Стекломорфизм + анимации) */
+.item-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(8px); /* Эффект матового стекла */
+    -webkit-backdrop-filter: blur(8px);
+    border: 3px solid #333;
+    padding: 25px 15px;
+    text-align: center;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Динамичная анимация при наведении мыши (карта всплывает) */
+.item-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    z-index: 10;
+    background: rgba(45, 50, 65, 0.8);
+}
+
+/* --- Стили редкости со свечением (Магия) --- */
+.rarity-Обычный { 
+    border-color: var(--rarity-common); 
+}
+.rarity-Обычный:hover {
+    box-shadow: 0 0 15px var(--rarity-common);
+}
+
+.rarity-Редкий { 
+    border-color: var(--rarity-rare); 
+}
+.rarity-Редкий:hover {
+    box-shadow: 0 0 25px var(--rarity-rare);
+}
+
+.rarity-Эпический { 
+    border-color: var(--rarity-epic); 
+}
+.rarity-Эпический:hover {
+    box-shadow: 0 0 30px var(--rarity-epic);
+}
+
+.rarity-Легендарный { 
+    border-color: var(--rarity-legendary); 
+    /* Постоянная мягкая пульсация для легендарок */
+    animation: legendary-pulse 2s infinite alternate;
+}
+.rarity-Легендарный:hover {
+    box-shadow: 0 0 40px var(--rarity-legendary);
+    animation: none; /* Останавливаем пульсацию при жестком свечении */
+}
+
+@keyframes legendary-pulse {
+    0% { box-shadow: 0 0 10px rgba(255, 170, 0, 0.3); }
+    100% { box-shadow: 0 0 25px rgba(255, 170, 0, 0.8); }
+}
+
+/* Картинки (8-бит) */
+.item-card img {
+    width: 80px;
+    height: 80px;
+    image-rendering: pixelated; /* Важнейшее свойство для сохранения пиксельности! */
+    filter: drop-shadow(0px 8px 6px rgba(0,0,0,0.6));
+    transition: transform 0.4s ease;
+}
+
+/* Картинка слегка подпрыгивает при наведении */
+.item-card:hover img {
+    transform: scale(1.15) rotate(3deg);
+}
+
+/* Текст внутри карточек */
+.item-card h3 {
+    font-size: 11px;
+    color: #fff;
+    margin: 20px 0 10px 0;
+    text-shadow: 2px 2px 0px #000;
+    line-height: 1.4;
+}
+
+.item-card p {
+    font-size: 9px;
+    color: #aaa;
+    margin: 8px 0;
+    text-shadow: 1px 1px 0px #000;
+}
+
+.item-card b {
+    color: var(--text-accent);
+    font-size: 10px;
+}
+
+/* Ретро CRT эффект (тонкие горизонтальные полосы на всем экране) */
+body::before {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    z-index: 999;
+    background-size: 100% 4px, 6px 100%;
+    pointer-events: none; /* Чтобы полосы не мешали кликать по кнопкам */
+}

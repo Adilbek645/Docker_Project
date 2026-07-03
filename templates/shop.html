@@ -1,13 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/style.css">
-    <title>Document</title>
+    <title>Магазин Кузни</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Welcome to the Forgery Page</h1>
-    <script src="static/shop.js"></script>
+
+    <h1>Лавка Торговца</h1>
+
+    <div class="header">
+        <div>Золото: <span id="gold-display">{{ user['gold'] }}</span></div>
+    </div>
+
+    <div class="inventory">
+        {% for item in items %}
+        <div class="item-card rarity-{{ item.rarity }}">
+            <img src="{{ item.image }}" alt="{{ item.name }}">
+            
+            <h3>{{ item.name }}</h3>
+            <h3>Тип: {{ item.category }}</h3>
+            <p>{{ item.price }} 🪙</p>
+            <p>Требуемый Уровень: {{ item.required_forge_level }}</p>
+            
+            <button class="buy_btn" onclick="buyItem('{{ item.name }}', '{{ item.price }}', '{{ item.required_forge_level }}')">
+                КУПИТЬ
+            </button>
+        </div>
+        {% else %}
+        <p>Магазин пока пуст.</p>
+        {% endfor %}
+    </div>
+
+    <script src="/static/shop.js"></script>
 </body>
 </html>

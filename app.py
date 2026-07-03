@@ -60,9 +60,9 @@ def create_tables():
     CREATE TABLE IF NOT EXISTS shop_items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         material_name TEXT NOT NULL,
-        material_category TEXT NOT NULL, -- лезвие, гарда, рукоять
+        material_category TEXT NOT NULL,
         price INTEGER NOT NULL,
-        required_forge_level INTEGER DEFAULT 1 -- Требуемый уровень кузни для покупки
+        required_forge_level INTEGER DEFAULT 1
     )
     """)
 
@@ -133,13 +133,31 @@ def create_materials_table():
     connection.commit()
     connection.close()
 
+def fill_shop():
+    shop_items = [
+        ('Бронза', 'Лезвие', 50, 1),
+        ('Железо', 'Лезвие', 100, 1),
+        ('Углеродистая сталь', 'Лезвие', 250, 2),
+        ('Дуб', 'Рукоять', 20, 1),
+        ('Кожа ската', 'Рукоять', 150, 1)
+    ]
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM shop_items")
+    cursor.executemany("""
+        INSERT INTO shop_items (material_name, material_category, price, required_forge_level) 
+        VALUES (?, ?, ?, ?)
+    """, shop_items)
+    
+    connection.commit()
+    connection.close()
+
+
+
 app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def forgery():
-
-
-
     return render_template("forgery.html")
 
 @app.route("/auction", methods=["GET", "POST"])
@@ -148,7 +166,33 @@ def auction():
 
 @app.route("/shop", methods=["GET", "POST"])
 def shop():
-    return render_template("shop.html")
+    user_id = 1
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT gold, forge_level FROM users WHERE id = ?", (user_id,))
+    user = cursor.fetchone()
+    cursor.execute("""
+        SELECT s.id, s.material_name, s.material_category ,s.price, s.required_forge_level, m.rarity, m.image_url
+        FROM shop_items s
+        JOIN materials m ON s.material_name = m.name AND s.material_category = m.category
+    """)
+    shop_items_db = cursor.fetchall()
+    connection.close()
+
+    items = []
+    for item in shop_items_db:
+        items.append({
+            "id": item["id"],
+            "name": item["material_name"],
+            "price": item["price"],
+            "required_forge_level": item["required_forge_level"],
+            "rarity": item["rarity"],
+            "image": f"/static/{item['image_url']}",
+            "category": item["material_category"]
+        })
+
+    return render_template("shop.html", items=items, user=user)
 
 @app.route("/guild", methods=["GET", "POST"])
 def guild():
@@ -190,6 +234,7 @@ if __name__ == '__main__':
     # проверка работы, я это потом удалю 👍
     create_tables()
     create_materials_table()
+    fill_shop()
     
     conn = get_connection()
     conn.cursor().execute("INSERT OR IGNORE INTO users (id, gold) VALUES (1, 1000)")
