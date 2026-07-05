@@ -6,8 +6,16 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+    <nav class="navbar">
+        <a href="/">Кузня</a>
+        <a href="/shop">Магазин</a>
+        <a href="/inventory">Инвентарь</a>
+        <a href="/guild">Гильдия</a>
+        <a href="/auction">Аукцион</a>
+        <a href="/upgrades">Улучшения</a>
+    </nav>
     <h1>Инвентарь</h1>
-    <div class="inventory-grid">
+    <div class="inventory_grid">
         {% if items %}
             {% for item in items %}
             <div class="item-card rarity-{{ item.rarity }}">

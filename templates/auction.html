@@ -7,6 +7,41 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Welcome to the Forgery Page</h1>
+    <nav class="navbar">
+        <a href="/">Кузня</a>
+        <a href="/shop">Магазин</a>
+        <a href="/inventory">Инвентарь</a>
+        <a href="/guild">Гильдия</a>
+        <a href="/auction">Аукцион</a>
+        <a href="/upgrades">Улучшения</a>
+    </nav>
+    <h1>Аукцион</h1>    
+    <div class="header">
+        <div>Золото: <span id="gold-display">{{ user['gold'] }}</span></div>
+    </div>
+    
+    <div class="inventory">
+        {% for sword in swords %}
+        <div class="item-card rarity-Обычный" id="sword-{{ sword.id }}">
+            <h3>{{ sword.name }}</h3>
+            <p>Урон: {{ sword.final_damage }}</p>
+            <p>Базовая цена: {{ sword.final_price }} 🪙</p>
+            <button class="buy_btn" onclick="auctionSell({{ sword.id }})">
+                ПРОДАТЬ НА АУКЦИОНЕ
+            </button>
+        </div>
+        {% else %}
+        <p>У вас нет мечей для продажи на аукционе.</p>
+        {% endfor %}
+    </div>
+
+    <script src="/static/auction.js"></script>
+    <div class="npc-container">
+        <div class="dialogue-box">
+            <p style="color: var(--text-accent); margin: 0 0 5px 0;"><b>Аукционист:</b></p>
+            <p>"Ставки сделаны! Кто предложит больше за этот клинок?"</p>
+        </div>
+        <img src="/static/images/NPC's/auction.png" class="npc-sprite" alt="Аукционист">
+    </div>
 </body>
 </html>

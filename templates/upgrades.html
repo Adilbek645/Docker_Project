@@ -7,6 +7,46 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Welcome to the Forgery Page</h1>
+    <nav class="navbar">
+        <a href="/">Кузня</a>
+        <a href="/shop">Магазин</a>
+        <a href="/inventory">Инвентарь</a>
+        <a href="/guild">Гильдия</a>
+        <a href="/auction">Аукцион</a>
+        <a href="/upgrades">Улучшения</a>
+    </nav>
+    <h1>Улучшения Кузни</h1>
+    <div class="user_info">
+        <p>Уровень кузнеца: {{ user['forge_level'] }}</p>
+        <p>Золото: {{ user['gold'] }}</p>
+    </div>
+    <div class="upgrade_options">
+        <h2>Доступные улучшения</h2>
+        <ul>
+            <li>Улучшение 1: Стоимость - 2500 золота</li>
+            <div class="upgrade-option">
+                <button class="upgrade_btn" onclick="upgradeForge(1, 2500)">Улучшить до уровня 2</button>
+            </div>
+            <li>Улучшение 2: Стоимость - 3500 золота</li>
+            <div class="upgrade-option">
+                <button class="upgrade_btn" onclick="upgradeForge(1, 3500)">Улучшить до уровня 3</button>
+            </div>
+            <li>Улучшение 3: Стоимость - 4000 золота</li>
+            <div class="upgrade-option">
+                <button class="upgrade_btn" onclick="upgradeForge(1, 4000)">Улучшить до уровня 4</button>
+            </div>
+            <li>Улучшение 4: Стоимость - 5000 золота</li>
+            <div class="upgrade-option">
+                <button class="upgrade_btn" onclick="upgradeForge(1, 5000)">Улучшить до уровня 5</button>
+            </div>
+        </ul>
+    </div>
+    <div class="npc-container">
+        <div class="dialogue-box">
+            <p style="color: var(--text-accent); margin: 0 0 5px 0;"><b>Старший Кузнец:</b></p>
+            <p>"Хочешь ковать лучше? Плати золото, я улучшу твою кузню."</p>
+        </div>
+        <img src="/static/images/NPC's/upgrade.png" class="npc-sprite" alt="Кузнец">
+    </div>
 </body>
 </html>

@@ -6,6 +6,14 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+    <nav class="navbar">
+        <a href="/">Кузня</a>
+        <a href="/shop">Магазин</a>
+        <a href="/inventory">Инвентарь</a>
+        <a href="/guild">Гильдия</a>
+        <a href="/auction">Аукцион</a>
+        <a href="/upgrades">Улучшения</a>
+    </nav>
 
     <h1>Лавка Торговца</h1>
 
@@ -23,7 +31,7 @@
             <p>{{ item.price }} 🪙</p>
             <p>Требуемый Уровень: {{ item.required_forge_level }}</p>
             
-            <button class="buy_btn" onclick="buyItem('{{ item.name }}', '{{ item.price }}', '{{ item.required_forge_level }}')">
+            <button class="buy_btn" onclick="shop_buy('{{ item.name }}','{{item.category}}', '{{ item.price }}', '{{ item.required_forge_level }}')">
                 КУПИТЬ
             </button>
         </div>
@@ -31,7 +39,13 @@
         <p>Магазин пока пуст.</p>
         {% endfor %}
     </div>
-
     <script src="/static/shop.js"></script>
+    <div class="npc-container">
+        <div class="dialogue-box">
+            <p style="color: var(--text-accent); margin: 0 0 5px 0;"><b>Торговец:</b></p>
+            <p>"Хороший металл стоит хороших денег! Выбирай, но руками не трогай."</p>
+        </div>
+        <img src="/static/images/NPC's/shopkeeper.png" class="npc-sprite" alt="Торговец">
+    </div>
 </body>
 </html>
