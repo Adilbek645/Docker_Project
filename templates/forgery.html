@@ -15,6 +15,36 @@
         <a href="/auction">Аукцион</a>
         <a href="/upgrades">Улучшения</a>
     </nav>
-    <h1>Welcome to the Forgery Page</h1>
+    <h1>Кузня</h1>
+    
+    <div class="forge_container" style="display: flex; gap: 50px; padding: 20px;">
+        <div class="forge_slots">
+            <h3>Слоты для ковки</h3>
+            <div id="slot-blade" class="slot" style="width: 64px; height: 64px; border: 2px dashed #ccc; margin-bottom: 5px; display: flex; align-items: center; justify-content: center;">Лезвие</div>
+            <div id="slot-guard" class="slot" style="width: 64px; height: 64px; border: 2px dashed #ccc; margin-bottom: 5px; display: flex; align-items: center; justify-content: center;">Гарда</div>
+            <div id="slot-handle" class="slot" style="width: 64px; height: 64px; border: 2px dashed #ccc; margin-bottom: 5px; display: flex; align-items: center; justify-content: center;">Рукоять</div>
+            
+            <input type="text" id="sword-name" placeholder="Название меча" style="margin-top: 10px; width: 100%;">
+            <br>
+            <button class="buy_btn" onclick="forgeSword()" style="margin-top: 10px; width: 100%;">ВЫКОВАТЬ</button>
+        </div>
+
+        <div class="forge_inventory">
+            <h3>Ваши материалы</h3>
+            <div class="inventory" style="grid-template-columns: repeat(3, 1fr);">
+                {% for item in inventory %}
+                <div class="item_card rarity_{{ item.rarity }}" onclick="selectMaterial('{{ item.name }}', '{{ item.category }}', '/static/{{ item.image_url }}')" style="cursor: pointer;">
+                    <img src="/static/{{ item.image_url }}" alt="{{ item.name }}" style="width: 32px; height: 32px; image-rendering: pixelated;">
+                    <p>{{ item.name }} ({{ item.quantity }} шт)</p>
+                    <p style="font-size: 10px;">{{ item.category }}</p>
+                </div>
+                {% else %}
+                <p>У вас нет материалов. Купите их в Магазине!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/forgery.js"></script>
 </body>
 </html>

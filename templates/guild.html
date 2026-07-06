@@ -19,11 +19,12 @@
     
     <div class="guild_header">
         <div>Репутация: <span id="rep-display">{{ user['guild_reputation'] }}</span></div>
+        <div>Золото: <span>{{ user['gold'] }}</span></div>
     </div>
     
     <div class="inventory">
         {% for sword in swords %}
-        <div class="item-card rarity-Обычный" id="sword-{{ sword.id }}">
+        <div class="item_card rarity_Обычный" id="sword-{{ sword.id }}">
             <h3>{{ sword.name }}</h3>
             <p>Урон: {{ sword.final_damage }}</p>
             <p>Цена: {{ sword.final_price }} 🪙</p>
@@ -36,13 +37,62 @@
         {% endfor %}
     </div>
 
+    <hr style="margin: 30px 0; border: 1px solid var(--border-color);">
+    <h2>Экспедиции</h2>
+    <div class="inventory">
+        <div class="item_card rarity_Обычный">
+            <h3>Ближний Лес</h3>
+            <p>Шанс: Обычный (100%)</p>
+            <p>Требуется: 10 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(1)" {% if user['guild_reputation'] < 10 %}disabled style="opacity:0.5"{% endif %}>
+                ОТПРАВИТЬ (100 🪙)
+            </button>
+        </div>
+        
+        <div class="item_card rarity_Редкий">
+            <h3>Забытые Шахты</h3>
+            <p>Шанс: Обычный (70%), Редкий (30%)</p>
+            <p>Требуется: 30 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(2)" {% if user['guild_reputation'] < 30 %}disabled style="opacity:0.5"{% endif %}>
+                ОТПРАВИТЬ (300 🪙)
+            </button>
+        </div>
+        
+        <div class="item_card rarity_Эпический">
+            <h3>Драконьи Горы</h3>
+            <p>Шанс: Редкий (50%), Эпик (10%)</p>
+            <p>Требуется: 50 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(3)" {% if user['guild_reputation'] < 50 %}disabled style="opacity:0.5"{% endif %}>
+                ОТПРАВИТЬ (600 🪙)
+            </button>
+        </div>
+        
+        <div class="item_card rarity_Эпический">
+            <h3>Мертвые Пустоши</h3>
+            <p>Шанс: Эпик (35%), Лега (5%)</p>
+            <p>Требуется: 80 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(4)" {% if user['guild_reputation'] < 80 %}disabled style="opacity:0.5"{% endif %}>
+                ОТПРАВИТЬ (1200 🪙)
+            </button>
+        </div>
+        
+        <div class="item_card rarity_Легендарный">
+            <h3>Край Света</h3>
+            <p>Шанс: Эпик (50%), Лега (15%)</p>
+            <p>Требуется: 100 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(5)" {% if user['guild_reputation'] < 100 %}disabled style="opacity:0.5"{% endif %}>
+                ОТПРАВИТЬ (2500 🪙)
+            </button>
+        </div>
+    </div>
+
     <script src="/static/guild.js"></script>
-    <div class="npc-container">
-        <div class="dialogue-box">
+    <div class="npc_container">
+        <div class="dialogue_box">
             <p style="color: var(--text-accent); margin: 0 0 5px 0;"><b>Глава Гильдии:</b></p>
             <p>"Принес мечи? Гильдия щедро платит за качественную работу."</p>
         </div>
-        <img src="/static/images/NPC's/guild.png" class="npc-sprite" alt="Глава Гильдии">
+        <img src="/static/images/NPC's/guild.png" class="npc_sprite" alt="Глава Гильдии">
     </div>
 </body>
 </html>

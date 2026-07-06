@@ -23,7 +23,7 @@
 
     <div class="inventory">
         {% for item in items %}
-        <div class="item-card rarity-{{ item.rarity }}">
+        <div class="item_card rarity_{{ item.rarity }}">
             <img src="{{ item.image }}" alt="{{ item.name }}">
             
             <h3>{{ item.name }}</h3>
@@ -40,12 +40,12 @@
         {% endfor %}
     </div>
     <script src="/static/shop.js"></script>
-    <div class="npc-container">
-        <div class="dialogue-box">
+    <div class="npc_container">
+        <div class="dialogue_box">
             <p style="color: var(--text-accent); margin: 0 0 5px 0;"><b>Торговец:</b></p>
             <p>"Хороший металл стоит хороших денег! Выбирай, но руками не трогай."</p>
         </div>
-        <img src="/static/images/NPC's/shopkeeper.png" class="npc-sprite" alt="Торговец">
+        <img src="/static/images/NPC's/shopkeeper.png" class="npc_sprite" alt="Торговец">
     </div>
 </body>
 </html>

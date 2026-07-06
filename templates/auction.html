@@ -22,7 +22,7 @@
     
     <div class="inventory">
         {% for sword in swords %}
-        <div class="item-card rarity-Обычный" id="sword-{{ sword.id }}">
+        <div class="item_card rarity_Обычный" id="sword-{{ sword.id }}">
             <h3>{{ sword.name }}</h3>
             <p>Урон: {{ sword.final_damage }}</p>
             <p>Базовая цена: {{ sword.final_price }} 🪙</p>
@@ -36,12 +36,12 @@
     </div>
 
     <script src="/static/auction.js"></script>
-    <div class="npc-container">
-        <div class="dialogue-box">
+    <div class="npc_container">
+        <div class="dialogue_box">
             <p style="color: var(--text-accent); margin: 0 0 5px 0;"><b>Аукционист:</b></p>
             <p>"Ставки сделаны! Кто предложит больше за этот клинок?"</p>
         </div>
-        <img src="/static/images/NPC's/auction.png" class="npc-sprite" alt="Аукционист">
+        <img src="/static/images/NPC's/auction.png" class="npc_sprite" alt="Аукционист">
     </div>
 </body>
 </html>

@@ -51,7 +51,7 @@ h1, h2, h3 {
 }
 
 /* Сетка инвентаря */
-.inventory-grid {
+.inventory_grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 25px;
@@ -61,7 +61,7 @@ h1, h2, h3 {
 }
 
 /* Карточка предмета (Стекломорфизм + анимации) */
-.item-card {
+.item_card {
     background: var(--bg-card);
     backdrop-filter: blur(8px); /* Эффект матового стекла */
     -webkit-backdrop-filter: blur(8px);
@@ -77,40 +77,40 @@ h1, h2, h3 {
 }
 
 /* Динамичная анимация при наведении мыши (карта всплывает) */
-.item-card:hover {
+.item_card:hover {
     transform: translateY(-8px) scale(1.03);
     z-index: 10;
     background: rgba(45, 50, 65, 0.8);
 }
 
 /* --- Стили редкости со свечением (Магия) --- */
-.rarity-Обычный { 
+.rarity_Обычный { 
     border-color: var(--rarity-common); 
 }
-.rarity-Обычный:hover {
+.rarity_Обычный:hover {
     box-shadow: 0 0 15px var(--rarity-common);
 }
 
-.rarity-Редкий { 
+.rarity_Редкий { 
     border-color: var(--rarity-rare); 
 }
-.rarity-Редкий:hover {
+.rarity_Редкий:hover {
     box-shadow: 0 0 25px var(--rarity-rare);
 }
 
-.rarity-Эпический { 
+.rarity_Эпический { 
     border-color: var(--rarity-epic); 
 }
-.rarity-Эпический:hover {
+.rarity_Эпический:hover {
     box-shadow: 0 0 30px var(--rarity-epic);
 }
 
-.rarity-Легендарный { 
+.rarity_Легендарный { 
     border-color: var(--rarity-legendary); 
     /* Постоянная мягкая пульсация для легендарок */
     animation: legendary-pulse 2s infinite alternate;
 }
-.rarity-Легендарный:hover {
+.rarity_Легендарный:hover {
     box-shadow: 0 0 40px var(--rarity-legendary);
     animation: none; /* Останавливаем пульсацию при жестком свечении */
 }
@@ -121,7 +121,7 @@ h1, h2, h3 {
 }
 
 /* Картинки (8-бит) */
-.item-card img {
+.item_card img {
     width: 80px;
     height: 80px;
     image-rendering: pixelated; /* Важнейшее свойство для сохранения пиксельности! */
@@ -130,12 +130,12 @@ h1, h2, h3 {
 }
 
 /* Картинка слегка подпрыгивает при наведении */
-.item-card:hover img {
+.item_card:hover img {
     transform: scale(1.15) rotate(3deg);
 }
 
 /* Текст внутри карточек */
-.item-card h3 {
+.item_card h3 {
     font-size: 11px;
     color: #fff;
     margin: 20px 0 10px 0;
@@ -143,14 +143,14 @@ h1, h2, h3 {
     line-height: 1.4;
 }
 
-.item-card p {
+.item_card p {
     font-size: 9px;
     color: #aaa;
     margin: 8px 0;
     text-shadow: 1px 1px 0px #000;
 }
 
-.item-card b {
+.item_card b {
     color: var(--text-accent);
     font-size: 10px;
 }
@@ -205,7 +205,7 @@ body::before {
 }
 
 /* ================= NPC И ДИАЛОГИ ================= */
-.npc-container {
+.npc_container {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -216,7 +216,7 @@ body::before {
     pointer-events: none;
 }
 
-.dialogue-box {
+.dialogue_box {
     background: rgba(15, 18, 27, 0.9);
     border: 2px solid var(--text-accent);
     border-radius: 8px;
@@ -230,7 +230,7 @@ body::before {
     margin-bottom: 50px;
 }
 
-.dialogue-box::after {
+.dialogue_box::after {
     content: '';
     position: absolute;
     bottom: 20px;
@@ -240,7 +240,7 @@ body::before {
     border-color: transparent transparent transparent var(--text-accent);
 }
 
-.npc-sprite {
+.npc_sprite {
     height: 160px;
     image-rendering: pixelated;
     filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.8));
