@@ -23,3 +23,4 @@ function shop_buy(materialName, category, price, requiredLevel) {
         console.error("Ошибка сети:", error);
     });
 }
+

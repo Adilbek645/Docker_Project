@@ -84,33 +84,33 @@ h1, h2, h3 {
 }
 
 /* --- Стили редкости со свечением (Магия) --- */
-.rarity_Обычный { 
+.rarity_Common { 
     border-color: var(--rarity-common); 
 }
-.rarity_Обычный:hover {
+.rarity_Common:hover {
     box-shadow: 0 0 15px var(--rarity-common);
 }
 
-.rarity_Редкий { 
+.rarity_Rare { 
     border-color: var(--rarity-rare); 
 }
-.rarity_Редкий:hover {
+.rarity_Rare:hover {
     box-shadow: 0 0 25px var(--rarity-rare);
 }
 
-.rarity_Эпический { 
+.rarity_Epic { 
     border-color: var(--rarity-epic); 
 }
-.rarity_Эпический:hover {
+.rarity_Epic:hover {
     box-shadow: 0 0 30px var(--rarity-epic);
 }
 
-.rarity_Легендарный { 
+.rarity_Legendary { 
     border-color: var(--rarity-legendary); 
     /* Постоянная мягкая пульсация для легендарок */
     animation: legendary-pulse 2s infinite alternate;
 }
-.rarity_Легендарный:hover {
+.rarity_Legendary:hover {
     box-shadow: 0 0 40px var(--rarity-legendary);
     animation: none; /* Останавливаем пульсацию при жестком свечении */
 }
@@ -250,4 +250,152 @@ body::before {
 @keyframes idle-bob {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
+}
+
+/* --- ЭКРАН КУЗНИ (/forge) --- */
+.forge_container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 40px;
+    padding: 20px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    align-items: start;
+    min-height: 70vh;
+}
+
+.forge_station {
+    background: linear-gradient(180deg, rgba(30, 35, 45, 0.6) 0%, rgba(60, 20, 10, 0.7) 100%);
+    border: 3px solid #333;
+    border-bottom: 5px solid var(--text-accent);
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 50px rgba(245, 100, 35, 0.1);
+}
+
+.forge_title {
+    color: var(--text-accent);
+    text-shadow: 2px 2px 0 #000;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.forge_slots_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 8px;
+    border: 2px dashed #444;
+    width: 100%;
+}
+
+.slot {
+    width: 96px;
+    height: 96px;
+    background: rgba(20, 25, 35, 0.8);
+    border: 2px solid #555;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+    transition: all 0.3s;
+    position: relative;
+}
+
+.slot::before {
+    content: attr(data-placeholder);
+    position: absolute;
+    color: #555;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 1;
+}
+
+.slot img {
+    z-index: 2;
+    width: 80px !important;
+    height: 80px !important;
+    image-rendering: pixelated;
+    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.8));
+}
+
+.slot:hover {
+    border-color: var(--text-accent);
+    box-shadow: 0 0 15px rgba(245, 166, 35, 0.3), inset 0 0 15px rgba(0,0,0,0.8);
+}
+
+.forge_controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sword_input {
+    width: 100%;
+    padding: 7px;
+    background: #0f121b;
+    border: 2px solid #444;
+    color: var(--text-primary);
+    font-family: inherit;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.sword_input:focus {
+    outline: none;
+    border-color: var(--text-accent);
+    box-shadow: 0 0 15px rgba(245, 166, 35, 0.3);
+}
+
+.forge_btn {
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(90deg, #8a230d, #f5a623);
+    border: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.2);
+    text-shadow: 2px 2px 0 #000;
+    transition: 0.3s;
+}
+
+.forge_btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(245, 166, 35, 0.4), inset 0 0 10px rgba(255,255,255,0.2);
+    background: linear-gradient(90deg, #a32a0f, #ffb63b);
+}
+
+.forge_btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.forge_inventory {
+    background: var(--bg-card);
+    border: 3px solid #333;
+    border-radius: 12px;
+    padding: 20px;
+    height: 100%;
+    max-height: 70vh;
+    overflow-y: auto;
 }

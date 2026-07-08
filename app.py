@@ -76,78 +76,94 @@ def create_materials_table():
     connection = get_connection()
     cursor = connection.cursor()
     cursor.execute("DROP TABLE IF EXISTS materials")
-    cursor.execute("""  
-    CREATE TABLE IF NOT EXISTS materials (
+    cursor.execute("""
+    CREATE TABLE materials (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         category TEXT NOT NULL,
         rarity TEXT NOT NULL,     
         image_url TEXT NOT NULL,
-        base_price INTEGER NOT NULL DEFAULT 50
+        base_price INTEGER NOT NULL DEFAULT 50,
+        required_forge_level INTEGER NOT NULL DEFAULT 1
     )
     """)
+    connection.cursor().execute("INSERT OR IGNORE INTO users (id, gold) VALUES (1, 10000)")
 
     all_materials = [
         # лезвия
-        ('Бронза', 'Лезвие', 'Обычный', 'images/materials/blade_bronze.png', 50),
-        ('Железо', 'Лезвие', 'Обычный', 'images/materials/blade_iron.png', 100),
-        ('Углеродистая сталь', 'Лезвие', 'Обычный', 'images/materials/blade_carbon_steel.png', 200),
-        ('Дамасская сталь', 'Лезвие', 'Обычный', 'images/materials/blade_damascus.png', 250),
-        ('Обсидиан', 'Лезвие', 'Обычный', 'images/materials/blade_obsidian.png', 300),
-        ('Порошковая сталь', 'Лезвие', 'Обычный', 'images/materials/blade_powder_steel.png', 350),
-        ('Мифрил', 'Лезвие', 'Обычный', 'images/materials/blade_mithril.png', 400),
-        ('Метеоритное железо', 'Лезвие', 'Обычный', 'images/materials/blade_meteorite.png', 450),
+        ('Бронза', 'Лезвие', 'Обычный', 'images/materials/blade_bronze.png', 50, 1),
+        ('Железо', 'Лезвие', 'Обычный', 'images/materials/blade_iron.png', 100, 1),
+        ('Углеродистая сталь', 'Лезвие', 'Обычный', 'images/materials/blade_carbon_steel.png', 200, 1),
+        ('Дамасская сталь', 'Лезвие', 'Обычный', 'images/materials/blade_damascus.png', 250, 2),
+        ('Обсидиан', 'Лезвие', 'Обычный', 'images/materials/blade_obsidian.png', 300, 2),
+        ('Порошковая сталь', 'Лезвие', 'Обычный', 'images/materials/blade_powder_steel.png', 350, 3),
+        ('Мифрил', 'Лезвие', 'Обычный', 'images/materials/blade_mithril.png', 400, 3),
+        ('Метеоритное железо', 'Лезвие', 'Обычный', 'images/materials/blade_meteorite.png', 450, 3),
         
         # лезвия крутые
-        ('Титановый сплав', 'Лезвие', 'Редкий', 'images/materials/blade_titanium.png', 600),
-        ('Пещерное железо', 'Лезвие', 'Редкий', 'images/materials/blade_cave_iron.png', 700),
-        ('Звёздная ртуть', 'Лезвие', 'Эпический', 'images/materials/blade_star_mercury.png', 1500),
-        ('Теневой обсидиан', 'Лезвие', 'Эпический', 'images/materials/blade_shadow_obsidian.png', 1800),
-        ('Пустотная сталь', 'Лезвие', 'Легендарный', 'images/materials/blade_void_steel.png', 5000),
-        ('Осколок Солнечного Горна', 'Лезвие', 'Легендарный', 'images/materials/blade_sun_forge.png', 6500),
-        ('Мокумэ-Ганэ', 'Лезвие', 'Легендарный', 'images/materials/blade_mokume_gane.png', 8000),
+        ('Титановый сплав', 'Лезвие', 'Редкий', 'images/materials/blade_titanium.png', 600, 3),
+        ('Пещерное железо', 'Лезвие', 'Редкий', 'images/materials/blade_cave_iron.png', 700, 3),
+        ('Звёздная ртуть', 'Лезвие', 'Эпический', 'images/materials/blade_star_mercury.png', 1500, 4),
+        ('Теневой обсидиан', 'Лезвие', 'Эпический', 'images/materials/blade_shadow_obsidian.png', 1800, 4),
+        ('Пустотная сталь', 'Лезвие', 'Легендарный', 'images/materials/blade_void_steel.png', 5000, 5),
+        ('Осколок Солнечного Горна', 'Лезвие', 'Легендарный', 'images/materials/blade_sun_forge.png', 6500, 5),
+        ('Мокумэ-Ганэ', 'Лезвие', 'Легендарный', 'images/materials/blade_mokume_gane.png', 8000, 5),
         
         # гарды
-        ('Бронза', 'Гарда', 'Обычный', 'images/materials/guard_bronze.png', 30),
-        ('Латунь', 'Гарда', 'Обычный', 'images/materials/guard_brass.png', 60),
-        ('Углеродистая сталь', 'Гарда', 'Обычный', 'images/materials/guard_carbon_steel.png', 120),
+        ('Бронза', 'Гарда', 'Обычный', 'images/materials/guard_bronze.png', 30, 1),
+        ('Латунь', 'Гарда', 'Обычный', 'images/materials/guard_brass.png', 60, 2),
+        ('Углеродистая сталь', 'Гарда', 'Обычный', 'images/materials/guard_carbon_steel.png', 120, 3),
         
         # гарды крутые
-        ('Оружейная бронза', 'Гарда', 'Редкий', 'images/materials/guard_weapon_bronze.png', 300),
-        ('Кость Титана', 'Гарда', 'Эпический', 'images/materials/guard_titan_bone.png', 1000),
-        ('Хроно-Лёд', 'Гарда', 'Легендарный', 'images/materials/guard_chrono_ice.png', 4000),
+        ('Оружейная бронза', 'Гарда', 'Редкий', 'images/materials/guard_weapon_bronze.png', 300, 3),
+        ('Кость Титана', 'Гарда', 'Эпический', 'images/materials/guard_titan_bone.png', 1000, 4),
+        ('Хроно-Лёд', 'Гарда', 'Легендарный', 'images/materials/guard_chrono_ice.png', 4000, 5),
         
         # рукоятки
-        ('Дуб', 'Рукоять', 'Обычный', 'images/materials/handle_oak.png', 20),
-        ('Орех', 'Рукоять', 'Обычный', 'images/materials/handle_walnut.png', 40),
-        ('Клен', 'Рукоять', 'Обычный', 'images/materials/handle_maple.png', 60),
-        ('Слоновая кость', 'Рукоять', 'Обычный', 'images/materials/handle_ivory.png', 100),
-        ('Кожа ската', 'Рукоять', 'Обычный', 'images/materials/handle_stingray.png', 150),
+        ('Дуб', 'Рукоять', 'Обычный', 'images/materials/handle_oak.png', 20, 1),
+        ('Орех', 'Рукоять', 'Обычный', 'images/materials/handle_walnut.png', 40, 1),
+        ('Клен', 'Рукоять', 'Обычный', 'images/materials/handle_maple.png', 60, 1),
+        ('Слоновая кость', 'Рукоять', 'Обычный', 'images/materials/handle_ivory.png', 100, 2),
+        ('Кожа ската', 'Рукоять', 'Обычный', 'images/materials/handle_stingray.png', 150, 2),
         
         # крутые рукоятки
-        ('Красное дерево', 'Рукоять', 'Редкий', 'images/materials/handle_mahogany.png', 400),
-        ('Рог оленя', 'Рукоять', 'Редкий', 'images/materials/handle_deer_horn.png', 500),
-        ('Черное дерево', 'Рукоять', 'Эпический', 'images/materials/handle_ebony.png', 1200),
-        ('Кожа Драконида', 'Рукоять', 'Эпический', 'images/materials/handle_dragonkin.png', 1600),
-        ('Шелк Иллюзий', 'Рукоять', 'Легендарный', 'images/materials/handle_illusion_silk.png', 3500),
-        ('Бивень Мамонта', 'Рукоять', 'Легендарный', 'images/materials/handle_mammoth.png', 4500),
+        ('Красное дерево', 'Рукоять', 'Редкий', 'images/materials/handle_mahogany.png', 400, 3),
+        ('Рог оленя', 'Рукоять', 'Редкий', 'images/materials/handle_deer_horn.png', 500, 3),
+        ('Черное дерево', 'Рукоять', 'Эпический', 'images/materials/handle_ebony.png', 1200, 4),
+        ('Кожа Драконида', 'Рукоять', 'Эпический', 'images/materials/handle_dragonkin.png', 1600, 4),
+        ('Шелк Иллюзий', 'Рукоять', 'Легендарный', 'images/materials/handle_illusion_silk.png', 3500, 5),
+        ('Бивень Мамонта', 'Рукоять', 'Легендарный', 'images/materials/handle_mammoth.png', 4500, 5),
     ]
 
-    cursor.execute("DELETE FROM materials")
     for item in all_materials:
-        cursor.execute("INSERT OR IGNORE INTO materials (name, category, rarity, image_url, base_price) VALUES (?, ?, ?, ?, ?)", item)
+        cursor.execute("INSERT INTO materials (name, category, rarity, image_url, base_price, required_forge_level) VALUES (?, ?, ?, ?, ?, ?)", item)
 
     connection.commit()
     connection.close()
 
 def fill_shop():
     shop_items = [
+        # Лезвия
         ('Бронза', 'Лезвие', 50, 1),
         ('Железо', 'Лезвие', 100, 1),
-        ('Углеродистая сталь', 'Лезвие', 250, 2),
-        ('Дуб', 'Рукоять', 20, 1),
-        ('Кожа ската', 'Рукоять', 150, 1),
+        ('Углеродистая сталь', 'Лезвие', 200, 2),
+        ('Дамасская сталь', 'Лезвие', 250, 3),
+        ('Обсидиан', 'Лезвие', 300, 2),
+        ('Порошковая сталь', 'Лезвие', 350, 3),
+        ('Мифрил', 'Лезвие', 400, 3),
+        ('Метеоритное железо', 'Лезвие', 450, 3),
+        
+        # Гарды
         ('Бронза', 'Гарда', 30, 1),
+        ('Латунь', 'Гарда', 60, 2),
+        ('Углеродистая сталь', 'Гарда', 120, 3),
+        
+        # Рукоятки
+        ('Дуб', 'Рукоять', 20, 1),
+        ('Клен', 'Рукоять', 60, 1),
+        ('Орех', 'Рукоять', 40, 2),
+        ('Слоновая кость', 'Рукоять', 100, 3),
+        ('Кожа ската', 'Рукоять', 150, 3)
     ]
     connection = get_connection()
     cursor = connection.cursor()
@@ -170,15 +186,16 @@ def forgery():
     cursor = connection.cursor()
     
     cursor.execute("""
-        SELECT m.name, m.category, m.rarity, m.image_url, i.quantity 
-        FROM inventory i
-        JOIN materials m ON i.material_name = m.name AND i.material_category = m.category
+        SELECT m.name, m.category, m.rarity, m.image_url, i.quantity, m.base_price, m.required_forge_level
+        FROM inventory i 
+        JOIN materials m ON i.material_name = m.name AND i.material_category = m.category 
         WHERE i.user_id = ? AND i.quantity > 0
     """, (user_id,))
     inventory = cursor.fetchall()
-    
+    cursor.execute("SELECT gold, forge_level FROM users WHERE id = ?", (user_id,))
+    user = cursor.fetchone()
     connection.close()
-    return render_template("forgery.html", inventory=inventory)
+    return render_template("forgery.html", inventory=inventory, user=user)
 
 @app.route("/forge_sword", methods=["POST"])
 def forge_sword():
@@ -187,7 +204,22 @@ def forge_sword():
     guard = data.get("guard")
     handle = data.get("handle")
     sword_name = data.get("sword_name", "Новый Меч")
-    
+    try:
+        quality = int(data.get("game_score") or 0)
+    except (ValueError, TypeError):
+        quality = 0
+
+    if quality > 90 and quality <= 100:
+        multiplier = 1.5
+    elif quality > 80 and quality <= 90:
+        multiplier = 1.3
+    elif quality >= 50:
+        multiplier = 1.0
+    elif quality >= 15:
+        multiplier = 0.5
+    else:
+        return jsonify({"success": False, "error": "Вы провалили мини-игру! Попробуйте снова."})
+
     if not blade or not guard or not handle:
         return jsonify({"success": False, "error": "Нужны все 3 компонента!"})
         
@@ -202,20 +234,22 @@ def forge_sword():
             if not item or item["quantity"] < 1:
                 return jsonify({"success": False, "error": f"Не хватает материала: {material_name}"})
                 
+        cursor.execute("SELECT forge_level FROM users WHERE id = ?", (user_id,))
+        forge_level = cursor.fetchone()["forge_level"]
+
         materials_data = {}
         total_price = 0
         for material_name in [blade, guard, handle]:
-            cursor.execute("SELECT image_url, base_price FROM materials WHERE name = ?", (material_name,))
+            cursor.execute("SELECT image_url, base_price, required_forge_level FROM materials WHERE name = ?", (material_name,))
             mat_info = cursor.fetchone()
             if mat_info:
+                if forge_level < mat_info["required_forge_level"]:
+                    return jsonify({"success": False, "error": f"Ваш уровень кузницы слишком мал для '{material_name}' (Требуется {mat_info['required_forge_level']} ур.)"})
                 materials_data[material_name] = mat_info["image_url"]
-                total_price += mat_info["base_price"]
+                total_price += mat_info["base_price"] * multiplier
             else:
                 materials_data[material_name] = "images/materials/blade_iron.png"
                 total_price += 50
-            
-        cursor.execute("SELECT forge_level FROM users WHERE id = ?", (user_id,))
-        forge_level = cursor.fetchone()["forge_level"]
         
         level_multiplier = 1.0 + ((forge_level - 1) * 0.15)
         final_price = int(total_price * level_multiplier)
@@ -350,8 +384,8 @@ def guild_expedition():
             1: {"req_rep": 10, "cost": 100, "chances": {"Обычный": 100}},
             2: {"req_rep": 30, "cost": 300, "chances": {"Обычный": 70, "Редкий": 30}},
             3: {"req_rep": 50, "cost": 600, "chances": {"Обычный": 40, "Редкий": 50, "Эпический": 10}},
-            4: {"req_rep": 80, "cost": 1200, "chances": {"Обычный": 20, "Редкий": 40, "Эпический": 35, "Легендарный": 5}},
-            5: {"req_rep": 100, "cost": 2500, "chances": {"Обычный": 5, "Редкий": 30, "Эпический": 50, "Легендарный": 15}}
+            4: {"req_rep": 80, "cost": 1200, "chances": {"Обычный": 20, "Редкий": 30, "Эпический": 45, "Легендарный": 5}},
+            5: {"req_rep": 100, "cost": 2500, "chances": {"Обычный": 10, "Редкий": 20, "Эпический": 55, "Легендарный": 15}}
         }
         
         if tier not in expedition_settings:
@@ -428,6 +462,41 @@ def upgrades():
     connection.close()
     return render_template("upgrades.html", user=user)
 
+@app.route("/upgrade_buy", methods=["POST"])
+def upgrade_buy():
+    data = request.get_json()
+    try:
+        new_level = int(data.get("new_forge_level", 0))
+        cost = int(data.get("cost", 0))
+    except (ValueError, TypeError):
+        return jsonify({"success": False, "error": "Неверные данные от клиента!"})
+    
+    user_id = 1
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("SELECT forge_level, gold FROM users WHERE id = ?", (user_id,))
+        user = cursor.fetchone()
+        
+        if new_level <= user["forge_level"]:
+            return jsonify({"success": False, "error": "Уровень кузницы уже выше или равен этому уровню."})
+        if new_level > user["forge_level"] + 1:
+            return jsonify({"success": False, "error": "Нельзя перепрыгивать уровни! Улучшайте по порядку."})
+        if user["gold"] < cost:
+            return jsonify({"success": False, "error": "Недостаточно золота."})
+            
+        cursor.execute("UPDATE users SET forge_level = ?, gold = gold - ? WHERE id = ?", (new_level, cost, user_id))
+        
+        connection.commit()
+        return jsonify({"success": True, "new_forge_level": new_level, "new_gold": user["gold"] - cost})
+    except Exception as e:
+        connection.rollback()
+        return jsonify({"success": False, "error": str(e)})
+    finally:
+        connection.close()
+
+
 @app.route("/inventory", methods=["GET", "POST"])
 def inventory():
     # тут тоже поменяю
@@ -437,12 +506,15 @@ def inventory():
     inventory_items = []
 
     cursor.execute("""
-        SELECT m.name, m.category, m.rarity, m.image_url, i.quantity 
+        SELECT m.name, m.category, m.rarity, m.image_url, i.quantity, si.required_forge_level
         FROM inventory i
         JOIN materials m ON i.material_name = m.name AND i.material_category = m.category
+        JOIN shop_items si ON m.name = si.material_name AND m.category = si.material_category
         WHERE i.user_id = ?
     """, (user_id,))
     items = cursor.fetchall()
+    cursor.execute("SELECT gold, forge_level FROM users WHERE id = ?", (user_id,))
+    user = cursor.fetchone()
     connection.close()
 
     for item in items:
@@ -451,10 +523,11 @@ def inventory():
             "category": item["category"],
             "rarity": item["rarity"],
             "image": f"/static/{item['image_url']}", 
-            "quantity": item["quantity"]
+            "quantity": item["quantity"],
+            "required_forge_level": item["required_forge_level"]
         })
 
-    return render_template("inventory.html", items=inventory_items)
+    return render_template("inventory.html", items=inventory_items, user=user)
 
 
 
@@ -516,15 +589,12 @@ def auction_sell():
         sword = cursor.fetchone()
         if not sword:
             return jsonify({"success": False, "error": "Меч не найден."})
-        
-        # Случайная цена от 0.7 до 1.3
-        multiplier = random.uniform(0.7, 1.3)
+
+        multiplier = random.uniform(0.5, 2.2)
         sold_price = int(sword["final_price"] * multiplier)
-        
-        # Обновляем золото
+
         cursor.execute("UPDATE users SET gold = gold + ? WHERE id = ?", (sold_price, user_id))
-        
-        # Удаляем проданный меч
+
         cursor.execute("DELETE FROM swords WHERE id = ?", (sword_id,))
         
         cursor.execute("SELECT gold FROM users WHERE id = ?", (user_id,))
@@ -545,9 +615,9 @@ if __name__ == '__main__':
     fill_shop()
     
     conn = get_connection()
-    conn.cursor().execute("INSERT OR IGNORE INTO users (id, gold) VALUES (1, 1000)")
+    conn.cursor().execute("INSERT OR IGNORE INTO users (id, gold) VALUES (1, 10000)")
 
     conn.commit()
     conn.close()
     
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5005)

@@ -18,15 +18,18 @@
     <div class="inventory_grid">
         {% if items %}
             {% for item in items %}
-            <div class="item_card rarity_{{ item.rarity }}">
-                <img src="{{ item.image }}" alt="{{ item.name }}">
-                <h3>{{ item.name }}</h3>
-                <p>Тип: {{ item.category }}</p>
-                <p>Кол-во: <b>{{ item.quantity }}</b></p>
-            </div>     
+                {% if item.quantity > 0 %}
+                        <div class="item_card rarity_{{ item.rarity }}">
+                            <img src="{{ item.image }}" alt="{{ item.name }}">
+                            <h3>{{ item.name }}</h3>
+                            <p>Тип: {{ item.category }}</p>
+                            <p>Кол-во: <b>{{ item.quantity }}</b></p>
+                            <p>Необходимый уровень кузницы: <b>{{ item.required_forge_level }}</b></p>
+                        </div>     
+                {% endif %}
+            {% endfor %}
         {% else %}
             <p>Ваш инвентарь пуст</p>
-        {% endfor %}
         {% endif %}
     </div>
 

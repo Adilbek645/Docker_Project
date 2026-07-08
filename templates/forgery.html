@@ -17,27 +17,33 @@
     </nav>
     <h1>Кузня</h1>
     
-    <div class="forge_container" style="display: flex; gap: 50px; padding: 20px;">
-        <div class="forge_slots">
-            <h3>Слоты для ковки</h3>
-            <div id="slot-blade" class="slot" style="width: 64px; height: 64px; border: 2px dashed #ccc; margin-bottom: 5px; display: flex; align-items: center; justify-content: center;">Лезвие</div>
-            <div id="slot-guard" class="slot" style="width: 64px; height: 64px; border: 2px dashed #ccc; margin-bottom: 5px; display: flex; align-items: center; justify-content: center;">Гарда</div>
-            <div id="slot-handle" class="slot" style="width: 64px; height: 64px; border: 2px dashed #ccc; margin-bottom: 5px; display: flex; align-items: center; justify-content: center;">Рукоять</div>
+    <div class="forge_container">
+        <div class="forge_station">
+            <h2 class="forge_title">Наковальня</h2>
+            <div class="forge_slots_wrapper">
+                <div id="slot-blade" class="slot" data-placeholder="Лезвие" data-default="Лезвие" onclick="unselectMaterial(this, 'Лезвие')" style="cursor: pointer;"></div>
+                <div id="slot-guard" class="slot" data-placeholder="Гарда" data-default="Гарда" onclick="unselectMaterial(this, 'Гарда')" style="cursor: pointer;"></div>
+                <div id="slot-handle" class="slot" data-placeholder="Рукоять" data-default="Рукоять" onclick="unselectMaterial(this, 'Рукоять')" style="cursor: pointer;"></div>
+            </div>
             
-            <input type="text" id="sword-name" placeholder="Название меча" style="margin-top: 10px; width: 100%;">
-            <br>
-            <button class="buy_btn" onclick="forgeSword()" style="margin-top: 10px; width: 100%;">ВЫКОВАТЬ</button>
+            <div class="forge_controls">
+                <input type="text" id="sword-name" class="sword_input" placeholder="Имя клинка...">
+                <button class="forge_btn" onclick="forgeSword()">ВЫКОВАТЬ</button>
+            </div>
         </div>
 
         <div class="forge_inventory">
-            <h3>Ваши материалы</h3>
-            <div class="inventory" style="grid-template-columns: repeat(3, 1fr);">
+            <h2 class="forge_title">Ваши материалы</h2>
+            <div class="inventory_grid">
                 {% for item in inventory %}
-                <div class="item_card rarity_{{ item.rarity }}" onclick="selectMaterial('{{ item.name }}', '{{ item.category }}', '/static/{{ item.image_url }}')" style="cursor: pointer;">
-                    <img src="/static/{{ item.image_url }}" alt="{{ item.name }}" style="width: 32px; height: 32px; image-rendering: pixelated;">
-                    <p>{{ item.name }} ({{ item.quantity }} шт)</p>
-                    <p style="font-size: 10px;">{{ item.category }}</p>
-                </div>
+                    {% if user['forge_level'] >= item['required_forge_level'] %}
+                        <div id="mat-{{ loop.index }}" class="item_card rarity_{{ item.rarity }}" onclick="selectMaterial('{{ item.name }}', '{{ item.category }}', '/static/{{ item.image_url }}', 'mat-{{ loop.index }}')" style="cursor: pointer;">
+                        <img src="/static/{{ item.image_url }}" alt="{{ item.name }}" style="width: 48px; height: 48px; image-rendering: pixelated; margin-bottom: 10px;">
+                        <p style="font-size: 12px; margin-bottom: 5px;">{{ item.name }}</p>
+                        <p style="font-size: 10px; opacity: 0.7;">{{ item.category }} ({{ item.quantity }} шт)</p>
+                        <p style="font-size: 10px; opacity: 0.7;">Цена: {{ item.base_price }} 🪙</p>
+                    </div>
+                    {% endif %}
                 {% else %}
                 <p>У вас нет материалов. Купите их в Магазине!</p>
                 {% endfor %}
@@ -46,5 +52,19 @@
     </div>
     
     <script src="/static/forgery.js"></script>
+    <div class="minigame_blade">
+        <div class="green_zone">
+
+        </div>
+        <div class="slider">
+
+        </div>
+    </div>
+    <div class="minigame_guard">
+        
+    </div>
+    <div class="minigame_handle">
+        
+    </div>
 </body>
 </html>
