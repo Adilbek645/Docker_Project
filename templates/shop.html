@@ -13,6 +13,7 @@
         <a href="/guild">Гильдия</a>
         <a href="/auction">Аукцион</a>
         <a href="/upgrades">Улучшения</a>
+        <a href="/logout">Выйти</a>
     </nav>
 
     <h1>Лавка Торговца</h1>
@@ -21,7 +22,7 @@
         <div>Золото: <span id="gold-display">{{ user['gold'] }}</span></div>
     </div>
 
-    <div class="inventory">
+    <div class="inventory_grid shop_grid">
         {% for item in items %}
         <div class="item_card rarity_{{ item.rarity }}">
             <img src="{{ item.image }}" alt="{{ item.name }}">
@@ -41,7 +42,7 @@
     </div>
     <script src="/static/shop.js"></script>
     <div class="npc_container">
-        <div class="dialogue_box">
+        <div class="dialogue_box" onclick="this.style.display='none'">
             <p style="color: var(--text-accent); margin: 0 0 5px 0;"><b>Торговец:</b></p>
             <p>"Хороший металл стоит хороших денег! Выбирай, но руками не трогай."</p>
         </div>

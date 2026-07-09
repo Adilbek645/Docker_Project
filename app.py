@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import os
 import sqlite3
 import random
 import PIL
 from PIL import Image
-import os
 
 DB_FOLDER = "data"
 DB_PATH = "data/Forgery.db"
@@ -23,10 +22,12 @@ def create_tables():
     cursor.execute("""  
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        gold INTEGER DEFAULT 0,
+        gold INTEGER DEFAULT 2000,
         forge_level INTEGER DEFAULT 1,
         guild_reputation INTEGER DEFAULT 0,
-        auction_access BOOLEAN DEFAULT 0
+        auction_access BOOLEAN DEFAULT 0,
+        username TEXT UNIQUE,
+        password TEXT
     )
     """)
 
@@ -177,11 +178,59 @@ def fill_shop():
     connection.close()
 
 
+
+
 app = Flask(__name__)
+app.secret_key = "Forge_Secret_Key"
+
+@app.route("/login" , methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute("SELECT id, password FROM users WHERE username = ?", (username,))
+        user = cursor.fetchone()
+        connection.close()
+        if user and password == user["password"]:
+            session["user_id"] = user["id"]
+            return redirect(url_for("forgery"))
+        else:
+            return render_template("login.html", error="Неверное имя пользователя или пароль")
+    return render_template("login.html")
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
+        existing_user = cursor.fetchone()
+        if existing_user:
+            connection.close()
+            return render_template("register.html", error="Имя пользователя уже занято")
+        password_hash = password
+        cursor.execute("INSERT INTO users (username, password, gold) VALUES (?, ?, ?)", (username, password_hash, 1000))
+        connection.commit()
+        user_id = cursor.lastrowid
+        connection.close()
+        session["user_id"] = user_id
+        return redirect(url_for("forgery"))
+    return render_template("register.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("user_id", None)
+    return redirect(url_for("login"))
 
 @app.route("/", methods=["GET", "POST"])
 def forgery():
-    user_id = 1
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
     
@@ -223,7 +272,9 @@ def forge_sword():
     if not blade or not guard or not handle:
         return jsonify({"success": False, "error": "Нужны все 3 компонента!"})
         
-    user_id = 1
+    if "user_id" not in session:
+        return jsonify({"success": False, "error": "Пожалуйста, войдите в систему"})
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
     
@@ -265,21 +316,6 @@ def forge_sword():
         sword_id = cursor.lastrowid
         
         connection.commit()
-        
-        
-        
-        blade_img = Image.open(f"static/{materials_data[blade]}").convert("RGBA")
-        guard_img = Image.open(f"static/{materials_data[guard]}").convert("RGBA")
-        handle_img = Image.open(f"static/{materials_data[handle]}").convert("RGBA")
-        
-        sword_img = Image.new("RGBA", (8, 24), (0,0,0,0))
-        sword_img.paste(blade_img, (0, 0), blade_img)
-        sword_img.paste(guard_img, (0, 8), guard_img)
-        sword_img.paste(handle_img, (0, 16), handle_img)
-        
-        os.makedirs("static/images/swords", exist_ok=True)
-        sword_img.save(f"static/images/swords/{sword_id}.png")
-        
         return jsonify({"success": True, "sword_id": sword_id, "price": final_price})
         
     except Exception as e:
@@ -292,7 +328,9 @@ def forge_sword():
 
 @app.route("/shop", methods=["GET", "POST"])
 def shop():
-    user_id = 1
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -322,7 +360,9 @@ def shop():
 
 @app.route("/guild", methods=["GET", "POST"])
 def guild():
-    user_id = 1
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -338,8 +378,8 @@ def guild():
 def guild_submit():
     data = request.get_json()
     sword_id = data.get("sword_id")
-    user_id = 1
-    
+    user_id = session.get("user_id")
+
     connection = get_connection()
     cursor = connection.cursor()
     
@@ -371,7 +411,7 @@ def guild_submit():
 def guild_expedition():
     data = request.get_json()
     tier = data.get("tier", 1)
-    user_id = 1
+    user_id = session.get("user_id")
     
     connection = get_connection()
     cursor = connection.cursor()
@@ -381,11 +421,11 @@ def guild_expedition():
         user = cursor.fetchone()
         
         expedition_settings = {
-            1: {"req_rep": 10, "cost": 100, "chances": {"Обычный": 100}},
-            2: {"req_rep": 30, "cost": 300, "chances": {"Обычный": 70, "Редкий": 30}},
-            3: {"req_rep": 50, "cost": 600, "chances": {"Обычный": 40, "Редкий": 50, "Эпический": 10}},
-            4: {"req_rep": 80, "cost": 1200, "chances": {"Обычный": 20, "Редкий": 30, "Эпический": 45, "Легендарный": 5}},
-            5: {"req_rep": 100, "cost": 2500, "chances": {"Обычный": 10, "Редкий": 20, "Эпический": 55, "Легендарный": 15}}
+            1: {"req_rep": 100, "cost": 100, "chances": {"Обычный": 100}},
+            2: {"req_rep": 300, "cost": 300, "chances": {"Обычный": 70, "Редкий": 30}},
+            3: {"req_rep": 500, "cost": 600, "chances": {"Обычный": 40, "Редкий": 50, "Эпический": 10}},
+            4: {"req_rep": 800, "cost": 1200, "chances": {"Обычный": 20, "Редкий": 30, "Эпический": 45, "Легендарный": 5}},
+            5: {"req_rep": 1000, "cost": 2500, "chances": {"Обычный": 10, "Редкий": 20, "Эпический": 55, "Легендарный": 15}}
         }
         
         if tier not in expedition_settings:
@@ -401,7 +441,6 @@ def guild_expedition():
             
         cursor.execute("UPDATE users SET gold = gold - ? WHERE id = ?", (settings["cost"], user_id))
         
-        import random
         roll = random.uniform(0, 100)
         current = 0
         chosen_rarity = "Обычный"
@@ -437,7 +476,9 @@ def guild_expedition():
 
 @app.route("/auction", methods=["GET"])
 def auction():
-    user_id = 1
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -453,7 +494,9 @@ def auction():
 
 @app.route("/upgrades", methods=["GET", "POST"])
 def upgrades():
-    user_id = 1
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -471,7 +514,9 @@ def upgrade_buy():
     except (ValueError, TypeError):
         return jsonify({"success": False, "error": "Неверные данные от клиента!"})
     
-    user_id = 1
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -499,8 +544,9 @@ def upgrade_buy():
 
 @app.route("/inventory", methods=["GET", "POST"])
 def inventory():
-    # тут тоже поменяю
-    user_id = 1
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
     inventory_items = []
@@ -538,7 +584,9 @@ def shop_buy():
     category = data.get("material_category")
     quantity = data.get("quantity", 1)
 
-    user_id = 1
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -580,7 +628,9 @@ def auction_sell():
     data = request.get_json()
     sword_id = data.get("sword_id")
     
-    user_id = 1
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -609,7 +659,6 @@ def auction_sell():
         connection.close()
 
 if __name__ == '__main__':
-    # проверка работы, я это потом удалю 👍
     create_tables()
     create_materials_table()
     fill_shop()

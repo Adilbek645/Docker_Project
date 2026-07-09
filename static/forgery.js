@@ -86,7 +86,7 @@ function selectMaterial(name, category, imageUrl, cardId) {
     selectedMaterialCards[category] = cardId;
     
     let newCard = document.getElementById(cardId);
-    if (newCard) newCard.style.display = 'none'; // Скрываем выбранный материал из инвентаря
+    if (newCard) newCard.style.display = 'none'; 
     
     let slotId = '';
     if (category === 'Лезвие') slotId = 'slot-blade';
@@ -95,22 +95,22 @@ function selectMaterial(name, category, imageUrl, cardId) {
     
     let slot = document.getElementById(slotId);
     slot.innerHTML = `<img src="${imageUrl}">`;
-    slot.setAttribute('data-placeholder', ''); // Убираем фоновый текст
+    slot.setAttribute('data-placeholder', '');
 }
 
 function unselectMaterial(slotElement, category) {
-    if (!selectedMaterials[category]) return; // Ничего не выбрано
+    if (!selectedMaterials[category]) return;
     
     if (selectedMaterialCards[category]) {
         let card = document.getElementById(selectedMaterialCards[category]);
-        if (card) card.style.display = 'block'; // Возвращаем в инвентарь
+        if (card) card.style.display = 'block';
     }
     
     selectedMaterials[category] = null;
     selectedMaterialCards[category] = null;
     
     slotElement.innerHTML = '';
-    slotElement.setAttribute('data-placeholder', slotElement.getAttribute('data-default')); // Возвращаем текст
+    slotElement.setAttribute('data-placeholder', slotElement.getAttribute('data-default'));
 }
 
 function forgeSword() {
@@ -119,13 +119,27 @@ function forgeSword() {
         return;
     }
 
-    game_score = 0; // Сбрасываем очки перед новой ковкой
+    let overlay = document.getElementById('forge-animation-overlay');
+    if (overlay) overlay.style.display = 'flex';
+
+    let audio = new Audio('/static/sound/freesound_community-anvil-hit-1-103967.mp3');
+    // первый удар сразу, затем в цикле
+    audio.play().catch(e => console.log("Sound error: ", e));
+    let forgeInterval = setInterval(() => {
+        let hitSound = audio.cloneNode();
+        hitSound.volume = 0.5;
+        hitSound.play().catch(e => console.log(e));
+    }, 500);
+
+    game_score = 0;
     blade_minigame();
     guard_minigame();
     handle_minigame();
     
-    // Wait for the minigames to finish before proceeding
+    
     setTimeout(() => {
+        clearInterval(forgeInterval);
+        if (overlay) overlay.style.display = 'none';
         sendForgeRequest();
     }, 11000);
 }

@@ -14,6 +14,7 @@
         <a href="/guild">Гильдия</a>
         <a href="/auction">Аукцион</a>
         <a href="/upgrades">Улучшения</a>
+        <a href="/logout">Выйти</a>
     </nav>
     <h1>Гильдия Приключенцев</h1>
     
@@ -22,7 +23,7 @@
         <div>Золото: <span>{{ user['gold'] }}</span></div>
     </div>
     
-    <div class="inventory">
+    <div class="inventory_grid">
         {% for sword in swords %}
         <div class="item_card rarity_Обычный" id="sword-{{ sword.id }}">
             <h3>{{ sword.name }}</h3>
@@ -39,12 +40,12 @@
 
     <hr style="margin: 30px 0; border: 1px solid var(--border-color);">
     <h2>Экспедиции</h2>
-    <div class="inventory">
+    <div class="inventory_grid">
         <div class="item_card rarity_Common">
             <h3>Ближний Лес</h3>
             <p>Шанс: Обычный (100%)</p>
-            <p>Требуется: 10 Репутации</p>
-            <button class="buy_btn" onclick="startExpedition(1)" {% if user['guild_reputation'] < 10 %}disabled style="opacity:0.5"{% endif %}>
+            <p>Требуется: 100 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(1)" {% if user['guild_reputation'] < 100 %}disabled style="opacity:0.5"{% endif %}>
                 ОТПРАВИТЬ (100 🪙)
             </button>
         </div>
@@ -52,8 +53,8 @@
         <div class="item_card rarity_Rare">
             <h3>Забытые Шахты</h3>
             <p>Шанс: Обычный (70%), Редкий (30%)</p>
-            <p>Требуется: 30 Репутации</p>
-            <button class="buy_btn" onclick="startExpedition(2)" {% if user['guild_reputation'] < 30 %}disabled style="opacity:0.5"{% endif %}>
+            <p>Требуется: 300 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(2)" {% if user['guild_reputation'] < 300 %}disabled style="opacity:0.5"{% endif %}>
                 ОТПРАВИТЬ (300 🪙)
             </button>
         </div>
@@ -61,8 +62,8 @@
         <div class="item_card rarity_Epic">
             <h3>Драконьи Горы</h3>
             <p>Шанс: Редкий (50%), Эпик (10%)</p>
-            <p>Требуется: 50 Репутации</p>
-            <button class="buy_btn" onclick="startExpedition(3)" {% if user['guild_reputation'] < 50 %}disabled style="opacity:0.5"{% endif %}>
+            <p>Требуется: 500 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(3)" {% if user['guild_reputation'] < 500 %}disabled style="opacity:0.5"{% endif %}>
                 ОТПРАВИТЬ (600 🪙)
             </button>
         </div>
@@ -70,8 +71,8 @@
         <div class="item_card rarity_Epic">
             <h3>Мертвые Пустоши</h3>
             <p>Шанс: Эпик (45%), Лега (5%)</p>
-            <p>Требуется: 80 Репутации</p>
-            <button class="buy_btn" onclick="startExpedition(4)" {% if user['guild_reputation'] < 80 %}disabled style="opacity:0.5"{% endif %}>
+            <p>Требуется: 800 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(4)" {% if user['guild_reputation'] < 800 %}disabled style="opacity:0.5"{% endif %}>
                 ОТПРАВИТЬ (1200 🪙)
             </button>
         </div>
@@ -79,8 +80,8 @@
         <div class="item_card rarity_Legendary">
             <h3>Край Света</h3>
             <p>Шанс: Эпик (55%), Лега (15%)</p>
-            <p>Требуется: 100 Репутации</p>
-            <button class="buy_btn" onclick="startExpedition(5)" {% if user['guild_reputation'] < 100 %}disabled style="opacity:0.5"{% endif %}>
+            <p>Требуется: 1000 Репутации</p>
+            <button class="buy_btn" onclick="startExpedition(5)" {% if user['guild_reputation'] < 1000 %}disabled style="opacity:0.5"{% endif %}>
                 ОТПРАВИТЬ (2500 🪙)
             </button>
         </div>
@@ -88,7 +89,7 @@
 
     <script src="/static/guild.js"></script>
     <div class="npc_container">
-        <div class="dialogue_box">
+        <div class="dialogue_box" onclick="this.style.display='none'">
             <p style="color: var(--text-accent); margin: 0 0 5px 0;"><b>Глава Гильдии:</b></p>
             <p>"Принес мечи? Гильдия щедро платит за качественную работу."</p>
         </div>
