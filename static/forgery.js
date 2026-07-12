@@ -6,70 +6,6 @@ let selectedMaterials = {
 
 let game_score = 0;
 
-function blade_minigame() {
-    let score = 0;
-    let timeLeft = 10; // 10 seconds for the minigame
-    const interval = setInterval(() => {
-        if (timeLeft <= 0) {
-            clearInterval(interval);
-            alert("Время вышло! Ваш результат: " + score);
-            game_score += score;
-            document.querySelector('.minigame_blade').innerHTML = `<p>Ваш результат: ${score}</p>`;
-            return;
-        }
-        
-        // Simulate a random event that increases the score
-        if (Math.random() < 0.5) { // 50% chance to increase score
-            score += Math.floor(Math.random() * 34) + 1; // Random score between 1 and 10
-        }
-        
-        timeLeft--;
-    }, 1000);
-}
-
-function guard_minigame() {
-    let score = 0;
-    let timeLeft = 10; // 10 seconds for the minigame
-    const interval = setInterval(() => {
-        if (timeLeft <= 0) {
-            clearInterval(interval);
-            alert("Время вышло! Ваш результат: " + score);
-            game_score += score;
-            document.querySelector('.minigame_guard').innerHTML = `<p>Ваш результат: ${score}</p>`;
-            return;
-        }
-        
-        // Simulate a random event that increases the score
-        if (Math.random() < 0.5) { // 50% chance to increase score
-            score += Math.floor(Math.random() * 33) + 1; // Random score between 1 and 10
-        }
-        
-        timeLeft--;
-    }, 1000);
-}
-
-function handle_minigame() {
-    let score = 0;
-    let timeLeft = 10; // 10 seconds for the minigame
-    const interval = setInterval(() => {
-        if (timeLeft <= 0) {
-            clearInterval(interval);
-            alert("Время вышло! Ваш результат: " + score);
-            game_score += score;
-            document.querySelector('.minigame_handle').innerHTML = `<p>Ваш результат: ${score}</p>`;
-            return;
-        }
-        
-        // Simulate a random event that increases the score
-        if (Math.random() < 0.5) { // 50% chance to increase score
-            score += Math.floor(Math.random() * 33) + 1; // Random score between 1 and 10
-        }
-        
-        timeLeft--;
-    }, 1000);
-}
-
-
 let selectedMaterialCards = {
     'Лезвие': null,
     'Гарда': null,
@@ -79,7 +15,7 @@ let selectedMaterialCards = {
 function selectMaterial(name, category, imageUrl, cardId) {
     if (selectedMaterialCards[category]) {
         let oldCard = document.getElementById(selectedMaterialCards[category]);
-        if (oldCard) oldCard.style.display = 'block'; // Возвращаем старый материал в инвентарь
+        if (oldCard) oldCard.style.display = 'block';
     }
 
     selectedMaterials[category] = name;
@@ -120,29 +56,36 @@ function forgeSword() {
     }
 
     let overlay = document.getElementById('forge-animation-overlay');
+    let progressText = document.querySelector('.forge-progress-text');
     if (overlay) overlay.style.display = 'flex';
 
+    let final_quality = 0;
+    let roll = Math.random() * 100;
+    if (roll > 90) final_quality = Math.floor(Math.random() * 10) + 91;
+    else if (roll > 70) final_quality = Math.floor(Math.random() * 10) + 81;
+    else if (roll > 20) final_quality = Math.floor(Math.random() * 31) + 50;
+    else final_quality = Math.floor(Math.random() * 35) + 15;
+
+    game_score = final_quality;
+    let current_quality = 0;
+
     let audio = new Audio('/static/sound/freesound_community-anvil-hit-1-103967.mp3');
-    // первый удар сразу, затем в цикле
     audio.play().catch(e => console.log("Sound error: ", e));
+    
     let forgeInterval = setInterval(() => {
         let hitSound = audio.cloneNode();
         hitSound.volume = 0.5;
         hitSound.play().catch(e => console.log(e));
     }, 500);
 
-    game_score = 0;
-    blade_minigame();
-    guard_minigame();
-    handle_minigame();
-    
-    
     setTimeout(() => {
         clearInterval(forgeInterval);
         if (overlay) overlay.style.display = 'none';
+        if (progressText) progressText.innerText = `ИДЕТ КОВКА...`;
         sendForgeRequest();
-    }, 11000);
+    }, 7000);
 }
+
 
 function sendForgeRequest() {
     let swordName = document.getElementById('sword-name').value;
@@ -161,8 +104,12 @@ function sendForgeRequest() {
     .then(response => response.json())
     .then(data => {
         if(data.success) {
-            alert("Вы успешно выковали меч! Его цена: " + data.price + " 🪙");
-            window.location.href = "/inventory";
+            let qualityText = "Обычное (x1.0)";
+            if (game_score > 90) qualityText = "Шедевр! (x1.5)";
+            else if (game_score > 70) qualityText = "Отличное (x1.3)";
+            else if (game_score < 50) qualityText = "С изъяном... (x0.5)";
+
+            alert(`Вы успешно выковали меч!\nКачество: ${game_score}/100 - ${qualityText}\nИтоговая цена: ${data.price} 🪙`);
         } else {
             alert("Ошибка: " + data.error);
         }

@@ -177,9 +177,6 @@ def fill_shop():
     connection.commit()
     connection.close()
 
-
-
-
 app = Flask(__name__)
 app.secret_key = "Forge_Secret_Key"
 
@@ -253,10 +250,8 @@ def forge_sword():
     guard = data.get("guard")
     handle = data.get("handle")
     sword_name = data.get("sword_name", "Новый Меч")
-    try:
-        quality = int(data.get("game_score") or 0)
-    except (ValueError, TypeError):
-        quality = 0
+    quality = int(data.get("game_score") or 0)
+
 
     if quality > 90 and quality <= 100:
         multiplier = 1.5
@@ -323,8 +318,6 @@ def forge_sword():
         return jsonify({"success": False, "error": str(e)})
     finally:
         connection.close()
-
-
 
 @app.route("/shop", methods=["GET", "POST"])
 def shop():
@@ -491,7 +484,6 @@ def auction():
     connection.close()
     return render_template("auction.html", user=user, swords=swords)
 
-
 @app.route("/upgrades", methods=["GET", "POST"])
 def upgrades():
     if "user_id" not in session:
@@ -541,7 +533,6 @@ def upgrade_buy():
     finally:
         connection.close()
 
-
 @app.route("/inventory", methods=["GET", "POST"])
 def inventory():
     if "user_id" not in session:
@@ -574,8 +565,6 @@ def inventory():
         })
 
     return render_template("inventory.html", items=inventory_items, user=user)
-
-
 
 @app.route("/shop_buy", methods=["POST"])
 def shop_buy():
