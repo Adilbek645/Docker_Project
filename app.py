@@ -543,10 +543,9 @@ def inventory():
     inventory_items = []
 
     cursor.execute("""
-        SELECT m.name, m.category, m.rarity, m.image_url, i.quantity, si.required_forge_level
+        SELECT m.name, m.category, m.rarity, m.image_url, i.quantity, m.required_forge_level
         FROM inventory i
         JOIN materials m ON i.material_name = m.name AND i.material_category = m.category
-        JOIN shop_items si ON m.name = si.material_name AND m.category = si.material_category
         WHERE i.user_id = ?
     """, (user_id,))
     items = cursor.fetchall()

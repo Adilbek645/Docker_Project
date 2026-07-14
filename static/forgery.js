@@ -110,6 +110,7 @@ function sendForgeRequest() {
             else if (game_score < 50) qualityText = "С изъяном... (x0.5)";
 
             alert(`Вы успешно выковали меч!\nКачество: ${game_score}/100 - ${qualityText}\nИтоговая цена: ${data.price} 🪙`);
+            window.location.href = "/";
         } else {
             alert("Ошибка: " + data.error);
         }
